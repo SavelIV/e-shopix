@@ -148,7 +148,7 @@ class CartController
                     // Оповещаем администратора о новом заказе по почте                
                     $adminEmail = 'savelevi@mail.ru';
                     $message = wordwrap($userComment, 60, "\r\n");
-                    $subject = 'Новый заказ с сайта http://Myshop';
+                    $subject = 'Новый заказ с сайта http://My_minishop.ru';
                     mail($adminEmail, $subject, $message);
 
                     // Очищаем корзину
