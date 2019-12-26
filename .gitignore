@@ -1,0 +1,5 @@
+puphpet/
+nbproject/
+.vagrant/
+config/db_params.php
+db_export/phpshop.sql
