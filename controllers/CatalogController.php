@@ -16,7 +16,7 @@ class CatalogController
         $categories = Category::getCategoriesList();
 
         // Список последних товаров
-        $latestProducts = Product::getLatestProducts(12);
+        $latestProducts = Product::getLatestProducts(14);
 
         // Подключаем вид
         require_once(ROOT . '/views/catalog/index.php');
