@@ -13,20 +13,20 @@ class User
      * @param string $password <p>Пароль</p>
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function register($name, $email, $password)
+    public static function register($name, $email, $passwordHash)
     {
         // Соединение с БД
         $db = Db::getConnection();
 
         // Текст запроса к БД
         $sql = 'INSERT INTO user (name, email, password) '
-                . 'VALUES (:name, :email, :password)';
+                . 'VALUES (:name, :email, :passwordHash)';
 
         // Получение и возврат результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':name', $name, PDO::PARAM_STR);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
-        $result->bindParam(':password', $password, PDO::PARAM_STR);
+        $result->bindParam(':passwordHash', $passwordHash, PDO::PARAM_STR);
         return $result->execute();
     }
 
@@ -67,19 +67,19 @@ class User
         $db = Db::getConnection();
 
         // Текст запроса к БД
-        $sql = 'SELECT * FROM user WHERE email = :email AND password = :password';
+        $sql = 'SELECT * FROM user WHERE email = :email ';
 
         // Получение результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
-        $result->bindParam(':email', $email, PDO::PARAM_INT);
-        $result->bindParam(':password', $password, PDO::PARAM_INT);
+        $result->bindParam(':email', $email, PDO::PARAM_STR);
+//        $result->bindParam(':password', $password, PDO::PARAM_STR);
         $result->execute();
 
         // Обращаемся к записи
         $user = $result->fetch();
 
-        if ($user) {
-            // Если запись существует, возвращаем id пользователя
+        if ($user || password_verify($password,$user['password'])) {
+            // Если запись существует b пароль совпадает с хешем в таблице, возвращаем id пользователя
             return $user['id'];
         }
         return false;

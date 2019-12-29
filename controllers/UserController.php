@@ -11,10 +11,7 @@ class UserController
     public function actionRegister()
     {
         // Переменные для формы
-        $name = false;
-        $email = false;
-        $password = false;
-        $result = false;
+        $name = $email = $password = $result = false;
 
         // Обработка формы
         if (isset($_POST['submit'])) {
@@ -42,9 +39,10 @@ class UserController
             }
             
             if ($errors == false) {
-                // Если ошибок нет
+                // Если ошибок нет хешируем пароль
+                $passwordHash = password_hash($_POST["password"],PASSWORD_DEFAULT);
                 // Регистрируем пользователя
-                $result = User::register($name, $email, $password);
+                $result = User::register($name, $email, $passwordHash);
             }
         }
 
@@ -65,8 +63,7 @@ class UserController
     public function actionLogin()
     {
         // Переменные для формы
-        $email = false;
-        $password = false;
+        $email = $password = false;
         
         // Обработка формы
         if (isset($_POST['submit'])) {
@@ -78,13 +75,13 @@ class UserController
             // Флаг ошибок
             $errors = false;
 
-            // Валидация полей
-            if (!User::checkEmail($email)) {
-                $errors[] = 'Неправильный email';
-            }
-            if (!User::checkPassword($password)) {
-                $errors[] = 'Пароль не должен быть короче 6-ти символов';
-            }
+//            // Валидация полей
+//            if (!User::checkEmail($email)) {
+//                $errors[] = 'Неправильный email';
+//            }
+//            if (!User::checkPassword($password)) {
+//                $errors[] = 'Пароль не должен быть короче 6-ти символов';
+//            }
 
             // Проверяем существует ли пользователь
             $userId = User::checkUserData($email, $password);

@@ -36,7 +36,7 @@ class CabinetController
 
         // Заполняем переменные для полей формы
         $name = $user['name'];
-        $password = $user['password'];
+//        $password = $user['password'];
 
         // Флаг результата
         $result = false;
@@ -60,8 +60,10 @@ class CabinetController
             }
 
             if ($errors == false) {
-                // Если ошибок нет, сохраняет изменения профиля
-                $result = User::edit($userId, $name, $password);
+                // Если ошибок нет хешируем пароль
+                $passwordHash = password_hash($_POST["password"],PASSWORD_DEFAULT);
+                // Редактируем данные пользователя
+                $result = User::edit($userId, $name, $passwordHash);
             }
         }
 
