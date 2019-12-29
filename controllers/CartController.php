@@ -131,7 +131,7 @@ class CartController
 
             // Валидация полей
             if (!User::checkName($userName)) {
-                $errors[] = 'Неправильное имя';
+                $errors[] = 'Имя не менее 2-х символов';
             }
             if (!User::checkPhone($userPhone)) {
                 $errors[] = 'Неправильный телефон';

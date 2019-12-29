@@ -37,7 +37,7 @@ class User
      * @param string $password <p>Пароль</p>
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function edit($id, $name, $password)
+    public static function edit($id, $name, $passwordHash)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -51,7 +51,7 @@ class User
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         $result->bindParam(':name', $name, PDO::PARAM_STR);
-        $result->bindParam(':password', $password, PDO::PARAM_STR);
+        $result->bindParam(':password', $passwordHash, PDO::PARAM_STR);
         return $result->execute();
     }
 
@@ -72,14 +72,14 @@ class User
         // Получение результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
-//        $result->bindParam(':password', $password, PDO::PARAM_STR);
         $result->execute();
 
         // Обращаемся к записи
         $user = $result->fetch();
 
-        if ($user || password_verify($password,$user['password'])) {
-            // Если запись существует b пароль совпадает с хешем в таблице, возвращаем id пользователя
+        if ($email && password_verify($password,$user['password'])) {
+            // Если запись существует и пароль совпадает с хешем в таблице, возвращаем id пользователя
+         
             return $user['id'];
         }
         return false;
