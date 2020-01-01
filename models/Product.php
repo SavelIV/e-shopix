@@ -7,7 +7,7 @@ class Product
 {
 
     // Количество отображаемых товаров по умолчанию
-    const SHOW_BY_DEFAULT = 3;
+    const SHOW_BY_DEFAULT = 1;
 
     /**
      * Возвращает массив последних товаров

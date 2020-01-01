@@ -34,7 +34,7 @@ class User
      * Редактирование данных пользователя
      * @param integer $id <p>id пользователя</p>
      * @param string $name <p>Имя</p>
-     * @param string $password <p>Пароль</p>
+     * @param string $passwordHash <p>Хеш пароля</p>
      * @return boolean <p>Результат выполнения метода</p>
      */
     public static function edit($id, $name, $passwordHash)

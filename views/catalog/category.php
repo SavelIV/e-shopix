@@ -1,6 +1,6 @@
 <?php include ROOT . '/views/layouts/header.php'; ?>
 
-<section>
+<section class="section-inner">
     <div class="container">
         <div class="row">
             <div class="col-sm-3">
@@ -50,12 +50,12 @@
                                         <div class="overlay-content">
                                             <h2>$<?php echo $product['price']; ?></h2>
                                             <p><a href="/product/<?php echo $product['id']; ?>">
-                                                <?php echo $product['name']; ?>
-                                            </a></p>
+                                                    <?php echo $product['name']; ?>
+                                                </a></p>
                                             <a href="/cart/add/<?php echo $product['id']; ?>" 
-                                            data-id="<?php echo $product['id']; ?>"
-                                            class="btn btn-default add-to-cart">
-                                            <i class="fa fa-shopping-cart"></i>В корзину (<?php echo Cart::countItems(); ?>)
+                                               data-id="<?php echo $product['id']; ?>"
+                                               class="btn btn-default add-to-cart">
+                                                <i class="fa fa-shopping-cart"></i>В корзину (<?php echo Cart::countItems(); ?>)
                                             </a>
                                         </div>
                                     </div>
@@ -68,7 +68,7 @@
                     <?php endforeach; ?>                              
 
                 </div><!--features_items-->
-                
+
                 <!-- Постраничная навигация -->
                 <?php echo $pagination->get(); ?>
 

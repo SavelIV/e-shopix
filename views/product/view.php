@@ -1,6 +1,6 @@
 <?php include ROOT . '/views/layouts/header.php'; ?>
 
-<section>
+<section class="section-inner">
     <div class="container">
         <div class="row">
             <div class="col-sm-3">

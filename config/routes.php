@@ -6,7 +6,7 @@ return array(
     // Каталог:
     'catalog' => 'catalog/index', // actionIndex в CatalogController
     // Категория товаров:
-    'category/([0-9]+)/page-([0-9]+)' => 'catalog/category/$1/$2', // actionCategory в CatalogController   
+    'category/([0-9]+)/page-([1-9][0-9]?)' => 'catalog/category/$1/$2', // actionCategory в CatalogController   
     'category/([0-9]+)' => 'catalog/category/$1', // actionCategory в CatalogController
     // Корзина:
     'cart/checkout' => 'cart/checkout', // actionCheckout в CartController    
