@@ -23,10 +23,10 @@
                         <p class="error">* - обязательное поле</p>
                         <br/>
                         <form action="#" method="post">
-                            <p>*Имя:</p>
+                            <p>*Имя(не менее 2 символов):</p>
                             <input type="text" name="name" placeholder="Имя" value="<?php echo $name; ?>"/>
                             
-                            <p>*Пароль:</p>
+                            <p>*Пароль(не менее 6 символов):</p>
                             <input type="password" name="password" placeholder="Пароль" value=""/>
                             <br/>
                             <input type="submit" name="submit" class="btn btn-default" value="Сохранить" />

@@ -63,62 +63,60 @@ class Pagination
 
         # get start/end limits for links range on the page
         $limits = $this->limits();
-
         $html = '<ul class="pagination">';
+        
         # generate links
         for ($page = $limits[0]; $page <= $limits[1]; $page++) {
-            # if current page - set class active
+            
+            # if current page - set class active, generate link
             if ($page == $this->current_page) {
                 $currentURI = rtrim($_SERVER['REQUEST_URI'], '/') . '/';
                 $currentURI = preg_replace('~/page-[0-9]+~', '', $currentURI);
                 $links .= '<li class="active"><a href="' . $currentURI . $this->index . $page . '">' . $page . '</a></li>';
             } else {
-                # Иначе генерируем ссылку
+                
+                # else - generate not active class link
                 $links .= $this->generateHtml($page);
             }
         }
 
-        # Если ссылки создались
+        # if links created
         if (!is_null($links)) {
-            # Если текущая страница не первая
+            # if current page not first
             if ($this->current_page > 1)
-            # Создаём ссылку "На первую"
+            # create link on first("<")
                 $links = $this->generateHtml(1, '&lt;') . $links;
 
-            # Если текущая страница не последняя
+            # if current page not last
             if ($this->current_page < $this->amount)
-            # Создаём ссылку "На последнюю"
+            # create link on last(">")
                 $links .= $this->generateHtml($this->amount, '&gt;');
         }
-
         $html .= $links . '</ul>';
 
-        # Возвращаем html
         return $html;
     }
 
     /**
-     * Для генерации HTML-кода ссылки
-     * @param integer $page - номер страницы
-     * 
-     * @return
+     * Generate HTML code of not active class link
+     * @param integer $page  page number
+     * @param mixed $text 
+     * @return string  HTML code with navigation links
      */
     private function generateHtml($page, $text = null)
     {
-        # Если текст ссылки не указан
+        # if no text on the page link
         if (!$text)
-        # Указываем, что текст - цифра страницы
+        # text - is the number of page
             $text = $page;
 
         $currentURI = rtrim($_SERVER['REQUEST_URI'], '/') . '/';
         $currentURI = preg_replace('~/page-[0-9]+~', '', $currentURI);
-        # Формируем HTML код ссылки и возвращаем
         return  '<li><a href="' . $currentURI . $this->index . $page . '">' . $text . '</a></li>';
     }
 
     /**
-     *  Get left/right limits for links range on the page
-     * 
+     * Get left/right limits for links range on the page
      * @return arr  array with start and end range limit
      */
     private function limits() {

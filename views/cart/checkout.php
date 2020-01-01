@@ -52,13 +52,13 @@
                                         <br/>
                                         <form action="#" method="post">
 
-                                        <p>*Ваше имя</p>
+                                        <p>*Ваше имя(не менее 2 символов):</p>
                                         <input type="text" name="userName" placeholder="" value="<?php echo $userName; ?>"/>
 
-                                        <p>*Номер телефона</p>
+                                        <p>*Номер телефона(только цифры, не менее 7-ми):</p>
                                         <input type="text" name="userPhone" placeholder="" value="<?php echo $userPhone; ?>"/>
 
-                                        <p>Комментарий к заказу</p>
+                                        <p>Комментарий к заказу(не более 60 символов):</p>
                                         <input type="text" name="userComment" placeholder="Сообщение" value="<?php echo $userComment; ?>"/>
 
                                         <br/>

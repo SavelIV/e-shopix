@@ -129,7 +129,7 @@ class User
      */
     public static function checkName($name)
     {
-        if (strlen($name) >= 2) {
+        if (mb_strlen($name) >= 2) {
             return true;
         }
         return false;
@@ -142,7 +142,7 @@ class User
      */
     public static function checkPhone($phone)
     {
-        if (strlen($phone) >= 7) {
+        if (preg_match("/^\d{7,}$/",$phone)) {
             return true;
         }
         return false;
