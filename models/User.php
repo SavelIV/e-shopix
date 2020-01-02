@@ -98,11 +98,11 @@ class User
     /**
      * Возвращает идентификатор пользователя, если он авторизирован.<br/>
      * Иначе перенаправляет на страницу входа
-     * @return string <p>Идентификатор пользователя</p>
+     * @return integer <p>Идентификатор пользователя</p>
      */
     public static function checkLogged()
     {
-        // Если сессия есть, вернем идентификатор пользователя
+        // if session started, return user id from session
         if (isset($_SESSION['user'])) {
             return $_SESSION['user'];
         }
@@ -198,9 +198,9 @@ class User
     }
 
     /**
-     * Возвращает пользователя с указанным id
-     * @param integer $id <p>id пользователя</p>
-     * @return array <p>Массив с информацией о пользователе</p>
+     * Returns user info depending of user id
+     * @param integer $id <p>user id</p>
+     * @return array <p>array with user info from DB</p>
      */
     public static function getUserById($id)
     {

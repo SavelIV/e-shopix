@@ -51,17 +51,17 @@ if (isset($_SESSION['products'])) {
 $count = 0;
             
 foreach ($_SESSION['products'] as $id => $quantity) {
-                
-$count = $count + $quantity;
+
+                $count = $count + $quantity;
             }
-return $count;
-        } 
-else {
+            return $count;
+        } else {
             // Если товаров нет, вернем 0
-return 0;
+            return 0;
         }
     }
-/*
+
+    /*
 * Возвращает массив с идентификаторами и количеством товаров в корзине<br/>
 * Если товаров нет, возвращает false;
 * @return mixed: boolean or array

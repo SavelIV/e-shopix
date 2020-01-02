@@ -4,8 +4,7 @@
  * Class Router
  * Works with routes
  */
-class Router
-{
+class Router {
 
     /**
      * Variable for storing an array of routes
@@ -16,8 +15,7 @@ class Router
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $routesPath = ROOT . '/config/routes.php';
 
         $this->routes = include($routesPath);
@@ -26,18 +24,16 @@ class Router
     /**
      * Returns query string
      */
-    private function getURI()
-    {
+    private function getURI() {
         if (!empty($_SERVER['REQUEST_URI'])) {
             return trim($_SERVER['REQUEST_URI'], '/');
-        } 
+        }
     }
 
     /**
      * Method to handle requests
      */
-    public function run()
-    {
+    public function run() {
         // get request string
         $uri = $this->getURI();
 
@@ -54,11 +50,11 @@ class Router
                 $controllerName = ucfirst(array_shift($segments) . 'Controller');
                 $actionName = 'action' . ucfirst(array_shift($segments));
                 $parameters = $segments;
-               
+
                 // include controller file
                 $controllerFile = ROOT . '/controllers/' .
                         $controllerName . '.php';
- 
+
                 if (file_exists($controllerFile)) {
                     include_once($controllerFile);
                 }

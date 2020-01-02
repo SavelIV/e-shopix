@@ -1,18 +1,16 @@
 <?php
 
 /**
- * Контроллер AdminController
- * Главная страница в админпанели
+ * AdminController
+ * Main page in adminpanel
  */
-class AdminController extends AdminBase
-{
+class AdminController extends AdminBase {
+
     /**
-     * Action для стартовой страницы "Панель администратора"
+     * Action for start page
      */
-    public function actionIndex()
-    {
-  
-        // Подключаем вид
+    public function actionIndex() {
+
         require_once(ROOT . '/views/admin/index.php');
         return true;
     }

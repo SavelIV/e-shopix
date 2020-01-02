@@ -3,7 +3,7 @@
 /**
  * Function for automatically load classes
  */
-spl_autoload_register(function ($class_name) { 
+spl_autoload_register(function ($class_name) {
 
     // Array of files, that may content needed classes
     $array_paths = array(

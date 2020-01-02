@@ -1,97 +1,74 @@
 <?php
 
 /**
- * Контроллер AdminOrderController
- * Управление заказами в админпанели
+ * AdminOrderController
+ * Manage orders in adminpanel
  */
-class AdminOrderController extends AdminBase
-{
+class AdminOrderController extends AdminBase {
 
     /**
-     * Action для страницы "Управление заказами"
+     * Action for page "Manage orders"
      */
-    public function actionIndex()
-    {
- 
-        // Получаем список заказов
+    public function actionIndex() {
+
         $ordersList = Order::getOrdersList();
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_order/index.php');
         return true;
     }
 
     /**
-     * Action для страницы "Редактирование заказа"
+     * Action for page "Update order"
      */
-    public function actionUpdate($id)
-    {
-  
-        // Получаем данные о конкретном заказе
+    public function actionUpdate($id) {
+
         $order = Order::getOrderById($id);
 
-        // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена   
-            // Получаем данные из формы
             $userName = $_POST['userName'];
             $userPhone = $_POST['userPhone'];
             $userComment = $_POST['userComment'];
             $date = $_POST['date'];
             $status = $_POST['status'];
 
-            // Сохраняем изменения
             Order::updateOrderById($id, $userName, $userPhone, $userComment, $date, $status);
 
-            // Перенаправляем пользователя на страницу управлениями заказами
             header("Location: /admin/order/view/$id");
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_order/update.php');
         return true;
     }
 
     /**
-     * Action для страницы "Просмотр заказа администратором"
+     * Action for page "View order by admin"
      */
-    public function actionView($id)
-    {
-  
-        // Получаем данные о конкретном заказе
+    public function actionView($id) {
+
         $order = Order::getOrderById($id);
 
-        // Раскодируем строку 'products' в массив
+        // decode string 'products' to array
         $productsQuantity = json_decode($order['products'], true);
-   
-        // Получаем массив с индентификаторами товаров
+
         $productsIds = array_keys($productsQuantity);
 
-        // Получаем список товаров в заказе
         $products = Product::getProduсtsByIds($productsIds);
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_order/view.php');
         return true;
     }
 
     /**
-     * Action для страницы "Удалить заказ"
+     * Action for page "Delete order"
      */
-    public function actionDelete($id)
-    {
- 
-        // Обработка формы
+    public function actionDelete($id) {
+
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Удаляем заказ
             Order::deleteOrderById($id);
 
-            // Перенаправляем пользователя на страницу управлениями товарами
             header("Location: /admin/order");
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_order/delete.php');
         return true;
     }

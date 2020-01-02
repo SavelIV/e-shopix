@@ -1,55 +1,44 @@
 <?php
 
 /**
- * Контроллер AdminCategoryController
- * Управление категориями товаров в админпанели
+ * AdminCategoryController
+ * Manages product categories in adminpanel
  */
-class AdminCategoryController extends AdminBase
-{
+class AdminCategoryController extends AdminBase {
 
     /**
-     * Action для страницы "Управление категориями"
+     * 
+     * Action for manage categories (main page)
      */
-    public function actionIndex()
-    {
-
-        // Получаем список категорий
+    public function actionIndex() {
         $categoriesList = Category::getCategoriesListAdmin();
-
-        // Подключаем вид
         require_once(ROOT . '/views/admin_category/index.php');
         return true;
     }
 
     /**
-     * Action для страницы "Добавить категорию"
+     * 
+     * Action for category create
      */
-    public function actionCreate()
-    {
-  
-        // Обработка формы
+    public function actionCreate() {
+
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Получаем данные из формы
             $name = $_POST['name'];
             $sortOrder = $_POST['sort_order'];
             $status = $_POST['status'];
 
-            // Флаг ошибок в форме
+            // error flags
             $errors = false;
 
-            // При необходимости можно валидировать значения нужным образом
+            // form validation
             if (!isset($name) || empty($name)) {
                 $errors[] = 'Заполните поля';
             }
 
 
             if ($errors == false) {
-                // Если ошибок нет
-                // Добавляем новую категорию
                 Category::createCategory($name, $sortOrder, $status);
 
-                // Перенаправляем пользователя на страницу управлениями категориями
                 header("Location: /admin/category");
             }
         }
@@ -59,51 +48,38 @@ class AdminCategoryController extends AdminBase
     }
 
     /**
-     * Action для страницы "Редактировать категорию"
+     * 
+     * Action for category update
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
 
-        // Получаем данные о конкретной категории
         $category = Category::getCategoryById($id);
 
-        // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена   
-            // Получаем данные из формы
             $name = $_POST['name'];
             $sortOrder = $_POST['sort_order'];
             $status = $_POST['status'];
 
-            // Сохраняем изменения
             Category::updateCategoryById($id, $name, $sortOrder, $status);
 
-            // Перенаправляем пользователя на страницу управлениями категориями
             header("Location: /admin/category");
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_category/update.php');
         return true;
     }
 
     /**
-     * Action для страницы "Удалить категорию"
+     * Action for category delete
      */
-    public function actionDelete($id)
-    {
-  
-        // Обработка формы
+    public function actionDelete($id) {
+
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Удаляем категорию
             Category::deleteCategoryById($id);
 
-            // Перенаправляем пользователя на страницу управлениями товарами
             header("Location: /admin/category");
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_category/delete.php');
         return true;
     }

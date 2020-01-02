@@ -1,4 +1,5 @@
 <?php
+
 // include composer autoload
 require 'vendor/autoload.php';
 
@@ -6,36 +7,29 @@ require 'vendor/autoload.php';
 use Intervention\Image\ImageManager;
 
 /**
- * Контроллер AdminProductController
- * Управление товарами в админпанели
+ * AdminProductController
+ * Manage products in adminpanel
  */
-class AdminProductController extends AdminBase
-{
+class AdminProductController extends AdminBase {
 
     /**
-     * Action для страницы "Управление товарами"
+     * Action for page "Manage products"
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
 
-        // Получаем список товаров
         $productsList = Product::getProductsList();
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_product/index.php');
         return true;
     }
 
     /**
-     * Action для страницы "Добавить товар"
+     * Action for page "Add product"
      */
-    public function actionCreate()
-    {
-  
-        // Получаем список категорий для выпадающего списка
+    public function actionCreate() {
+
         $categoriesList = Category::getCategoriesListAdmin();
 
-        // Обработка формы
         if (isset($_POST['submit'])) {
             // Если форма отправлена
             // Получаем данные из формы
@@ -50,69 +44,57 @@ class AdminProductController extends AdminBase
             $options['is_recommended'] = $_POST['is_recommended'];
             $options['status'] = $_POST['status'];
 
-            // Флаг ошибок в форме
+            // errors flag
             $errors = false;
 
-            // При необходимости можно валидировать значения нужным образом
+            // validate form
             if (!isset($options['name']) || empty($options['name']) ||
                     !isset($options['code']) || empty($options['code']) ||
                     !isset($options['category_id']) || empty($options['category_id']) ||
-                    !isset($options['price']) || empty($options['price']))
-                {
-                    $errors[] = 'Заполните все поля';
-                }
-                else if (!preg_match("/^[0-9]+(\.[0-9])?[0-9]?$/",$options['price'])) 
-                { 
-                    $errors[] = 'Некорректная стоимость (пример: 999.99)'; 
-                }
-                
+                    !isset($options['price']) || empty($options['price'])) {
+                $errors[] = 'Заполните все поля';
+            } else if (!preg_match("/^[0-9]+(\.[0-9])?[0-9]?$/", $options['price'])) {
+                $errors[] = 'Некорректная стоимость (пример: 999.99)';
+            }
+
             if ($errors == false) {
-                // Если ошибок нет
-                // Добавляем новый товар
+                // add new product
                 $id = Product::createProduct($options);
 
-                // Если запись добавлена
+                // if add
                 if ($id) {
-                    // Проверим, загружалось ли через форму изображение
+                    // check if image uploaded
                     if (is_uploaded_file($_FILES["image"]["tmp_name"])) {
-                        // Если загружалось, переместим его в нужную папку, дадим новое имя
+                        // if uploaded, move it to needed folder and give needed name
                         move_uploaded_file($_FILES["image"]["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg");
-                        
 
-// create an image manager instance with favored driver
+
+                        // create an image manager instance with favored driver
                         $manager = new ImageManager(array('driver' => 'imagick'));
 
-// to finally create image instances
+                        // resize and save new image with needed params
                         $image = $manager->make($_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg")->resize(600, 400)->save($_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg");
                     }
                 }
 
-                // Перенаправляем админа на страницу управлениями товарами
                 header("Location: /admin/product");
             }
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_product/create.php');
         return true;
     }
 
     /**
-     * Action для страницы "Редактировать товар"
+     * Action for page "Update product"
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
 
-        // Получаем список категорий для выпадающего списка
         $categoriesList = Category::getCategoriesListAdmin();
 
-        // Получаем данные о конкретном заказе
         $product = Product::getProductById($id);
 
-        // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Получаем данные из формы редактирования. При необходимости можно валидировать значения
             $options['name'] = $_POST['name'];
             $options['code'] = $_POST['code'];
             $options['price'] = $_POST['price'];
@@ -123,73 +105,58 @@ class AdminProductController extends AdminBase
             $options['is_new'] = $_POST['is_new'];
             $options['is_recommended'] = $_POST['is_recommended'];
             $options['status'] = $_POST['status'];
-            
-           // Флаг ошибок в форме
+
+            // errors flag
             $errors = false;
 
-            // При необходимости можно валидировать значения нужным образом
+            // validate form
             if (!isset($options['name']) || empty($options['name']) ||
                     !isset($options['code']) || empty($options['code']) ||
                     !isset($options['category_id']) || empty($options['category_id']) ||
-                    !isset($options['price']) || empty($options['price']))
-                {
-                    $errors[] = 'Заполните все поля';
-                }
-                else if (!preg_match("/^[0-9]+(\.[0-9])?[0-9]?$/",$options['price'])) 
-                { 
-                    $errors[] = 'Некорректная стоимость (пример: 999.99)'; 
-                }
-                
-            if ($errors == false) { 
-                // Если ошибок нет
-                // сохраняем исправления
-                $result = Product::updateProductById($id, $options);
-                
-                // Если запись сохранена
-                if ($result) {
-                
-                // Проверим, загружалось ли через форму изображение
-                if (is_uploaded_file($_FILES["image"]["tmp_name"])) {
-  
-                    // Если загружалось, переместим его в нужную папку, дадим новое имя
-                    move_uploaded_file($_FILES["image"]["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg");
-
-// create an image manager instance with favored driver
-                        $manager = new ImageManager(array('driver' => 'imagick'));
-
-// to finally create image instances
-                        $image = $manager->make($_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg")->resize(600, 400)->save($_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg");                    
-                    
-                    
-                }
+                    !isset($options['price']) || empty($options['price'])) {
+                $errors[] = 'Заполните все поля';
+            } else if (!preg_match("/^[0-9]+(\.[0-9])?[0-9]?$/", $options['price'])) {
+                $errors[] = 'Некорректная стоимость (пример: 999.99)';
             }
 
-            // Перенаправляем админа на страницу управлениями товарами
-            header("Location: /admin/product");
+            if ($errors == false) {
+                $result = Product::updateProductById($id, $options);
+
+                // if updated
+                if ($result) {
+
+                    // check if image uploaded
+                    if (is_uploaded_file($_FILES["image"]["tmp_name"])) {
+
+                        // if uploaded, move it to needed folder and give needed name
+                        move_uploaded_file($_FILES["image"]["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg");
+
+                        // create an image manager instance with favored driver
+                        $manager = new ImageManager(array('driver' => 'imagick'));
+
+                        // resize and save new image with needed params
+                        $image = $manager->make($_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg")->resize(600, 400)->save($_SERVER['DOCUMENT_ROOT'] . "upload/images/products/{$id}.jpg");
+                    }
+                }
+
+                header("Location: /admin/product");
+            }
         }
-    }
-        // Подключаем вид
         require_once(ROOT . '/views/admin_product/update.php');
         return true;
     }
 
     /**
-     * Action для страницы "Удалить товар"
+     * Action for page "Delete product"
      */
-    public function actionDelete($id)
-    {
- 
-        // Обработка формы
+    public function actionDelete($id) {
+
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Удаляем товар
             Product::deleteProductById($id);
 
-            // Перенаправляем админа на страницу управлениями товарами
             header("Location: /admin/product");
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/admin_product/delete.php');
         return true;
     }

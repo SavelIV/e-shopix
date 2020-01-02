@@ -1,36 +1,29 @@
 <?php
 
 /**
- * Контроллер CabinetController
- * Кабинет пользователя
+ * Class CabinetController
+ * Class for User cabinet manage
  */
-class CabinetController
+class CabinetController extends CabinetBase
 {
 
     /**
-     * Action для страницы "Кабинет пользователя"
+     * Action for "User cabinet" page
      */
     public function actionIndex()
     {
-        // Получаем идентификатор пользователя из сессии
-        $userId = User::checkLogged();
-
-        // Получаем информацию о пользователе из БД
+        // get user info from DB
         $user = User::getUserById($userId);
 
-        // Подключаем вид
         require_once(ROOT . '/views/cabinet/index.php');
         return true;
     }
 
     /**
-     * Action для страницы "Редактирование данных пользователя"
+     * Action for "User data edit" page
      */
     public function actionEdit()
     {
-        // Получаем идентификатор пользователя из сессии
-        $userId = User::checkLogged();
-
         // Получаем информацию о пользователе из БД
         $user = User::getUserById($userId);
 
@@ -72,13 +65,10 @@ class CabinetController
         return true;
     }
     /**
-     * Action для страницы "История заказа пользователя"
+     * Action for "User order history" page
      */
     public function actionHistory()
     {
-        // Получаем идентификатор пользователя из сессии
-        $userId = User::checkLogged();
-        
         // Получаем данные о конкретном заказе
         $ordersList = Order::getOrdersListByUserId($userId);
         
@@ -91,13 +81,10 @@ class CabinetController
         
     }
     /**
-     * Action для страницы "Просмотр заказа пользователем"
+     * Action for "User order view" page
      */
     public function actionView($id)
     {
-        // Получаем идентификатор пользователя из сессии
-        $userId = User::checkLogged();
-        
         // Получаем данные о конкретном заказе
         $order = Order::getOrderById($id);
         

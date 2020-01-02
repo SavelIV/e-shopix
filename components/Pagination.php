@@ -3,9 +3,7 @@
 /**
  * Class Pagination generate page navigation
  */
-
-class Pagination
-{
+class Pagination {
 
     /**
      * @param integer $max <p>amount of page links on one page</p>
@@ -39,8 +37,7 @@ class Pagination
      * @param integer $limit <p>amount of products on one page</p>
      * @param string $index <p>the key for string number</p>
      */
-    public function __construct($total, $currentPage, $limit, $index)
-    {
+    public function __construct($total, $currentPage, $limit, $index) {
         $this->total = $total;
 
         $this->limit = $limit;
@@ -49,7 +46,7 @@ class Pagination
 
         # set total amount of pages
         $this->amount = $this->amount();
-        
+
         # set number of current page
         $this->setCurrentPage($currentPage);
     }
@@ -64,17 +61,17 @@ class Pagination
         # get start/end limits for links range on the page
         $limits = $this->limits();
         $html = '<ul class="pagination">';
-        
+
         # generate links
         for ($page = $limits[0]; $page <= $limits[1]; $page++) {
-            
+
             # if current page - set class active, generate link
             if ($page == $this->current_page) {
                 $currentURI = rtrim($_SERVER['REQUEST_URI'], '/') . '/';
                 $currentURI = preg_replace('~/page-[0-9]+~', '', $currentURI);
                 $links .= '<li class="active"><a href="' . $currentURI . $this->index . $page . '">' . $page . '</a></li>';
             } else {
-                
+
                 # else - generate not active class link
                 $links .= $this->generateHtml($page);
             }
@@ -103,8 +100,7 @@ class Pagination
      * @param mixed $text 
      * @return string  HTML code with navigation links
      */
-    private function generateHtml($page, $text = null)
-    {
+    private function generateHtml($page, $text = null) {
         # if no text on the page link
         if (!$text)
         # text - is the number of page
@@ -112,7 +108,7 @@ class Pagination
 
         $currentURI = rtrim($_SERVER['REQUEST_URI'], '/') . '/';
         $currentURI = preg_replace('~/page-[0-9]+~', '', $currentURI);
-        return  '<li><a href="' . $currentURI . $this->index . $page . '">' . $text . '</a></li>';
+        return '<li><a href="' . $currentURI . $this->index . $page . '">' . $text . '</a></li>';
     }
 
     /**

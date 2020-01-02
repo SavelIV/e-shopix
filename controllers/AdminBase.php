@@ -1,17 +1,16 @@
 <?php
 
 /**
- * The abstract class AdminBase contains common logic for admin panel controllers
+ * Abstract class AdminBase 
+ * contains common logic for admin panel controllers
  */
-abstract class AdminBase
-{
+abstract class AdminBase {
 
     /**
      * Checks if user is an admin
      * @return boolean
      */
-    public function __construct()
-    {
+    public function __construct() {
         $userId = User::checkLogged();
 
         $user = User::getUserById($userId);
