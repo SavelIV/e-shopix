@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Контроллер CartController
- * Корзина
+ * Class CartController
+ * Work with cart
  */
 class CartController
 {
@@ -146,10 +146,10 @@ class CartController
                 if ($result) {
                     // Если заказ успешно сохранен
                     // Оповещаем администратора о новом заказе по почте                
-                    $adminEmail = 'savelevi@mail.ru';
+                    $adminEmail = '';
                     $message = wordwrap($userComment, 60, "\r\n");
                     $subject = 'Новый заказ с сайта http://My_minishop.ru';
-                    mail($adminEmail, $subject, $message);
+//                    mail($adminEmail, $subject, $message);
 
                     // Очищаем корзину
                     Cart::clear();

@@ -31,8 +31,6 @@ class AdminProductController extends AdminBase {
         $categoriesList = Category::getCategoriesListAdmin();
 
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Получаем данные из формы
             $options['name'] = $_POST['name'];
             $options['code'] = $_POST['code'];
             $options['price'] = $_POST['price'];

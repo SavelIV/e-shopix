@@ -4,14 +4,16 @@
  * Class CabinetController
  * Class for User cabinet manage
  */
-class CabinetController extends CabinetBase
-{
-
+class CabinetController {
+   
     /**
      * Action for "User cabinet" page
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
+        
+        // check if user is logged
+        $userId = User::checkLogged();
+        
         // get user info from DB
         $user = User::getUserById($userId);
 
@@ -22,29 +24,25 @@ class CabinetController extends CabinetBase
     /**
      * Action for "User data edit" page
      */
-    public function actionEdit()
-    {
-        // Получаем информацию о пользователе из БД
+    public function actionEdit() {
+        
+        // check if user is logged
+        $userId = User::checkLogged();
+        // get user info from DB
         $user = User::getUserById($userId);
 
-        // Заполняем переменные для полей формы
         $name = $user['name'];
-//        $password = $user['password'];
-
-        // Флаг результата
+        // result flag
         $result = false;
 
-        // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Получаем данные из формы редактирования
             $name = $_POST['name'];
             $password = $_POST['password'];
 
-            // Флаг ошибок
+            // errors flag
             $errors = false;
 
-            // Валидируем значения
+            // validate form
             if (!User::checkName($name)) {
                 $errors[] = 'Имя не должно быть короче 2-х символов';
             }
@@ -53,54 +51,56 @@ class CabinetController extends CabinetBase
             }
 
             if ($errors == false) {
-                // Если ошибок нет хешируем пароль
-                $passwordHash = password_hash($_POST["password"],PASSWORD_DEFAULT);
-                // Редактируем данные пользователя
+                // hash password if no errors
+                $passwordHash = password_hash($_POST["password"], PASSWORD_DEFAULT);
+                // edit user data
                 $result = User::edit($userId, $name, $passwordHash);
             }
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/cabinet/edit.php');
         return true;
     }
+
     /**
      * Action for "User order history" page
      */
-    public function actionHistory()
-    {
-        // Получаем данные о конкретном заказе
-        $ordersList = Order::getOrdersListByUserId($userId);
+    public function actionHistory() {
         
-        //Если заказа не было
-        if (empty($ordersList)){
+        // check if user is logged
+        $userId = User::checkLogged();
+        // get values of user order
+        $ordersList = Order::getOrdersListByUserId($userId);
+
+        //if no orders
+        if (empty($ordersList)) {
             $ordersList = 0;
         }
-            require_once(ROOT . '/views/cabinet/history.php');
-            return true;
-        
+        require_once(ROOT . '/views/cabinet/history.php');
+        return true;
     }
+
     /**
      * Action for "User order view" page
      */
-    public function actionView($id)
-    {
-        // Получаем данные о конкретном заказе
-        $order = Order::getOrderById($id);
+    public function actionView($id) {
         
-        // Раскодируем строку 'products' в массив
+        // check if user is logged
+        $userId = User::checkLogged();
+        // get values of user order
+        $order = Order::getOrderById($id);
+
+        // decode string "products" into array
         $productsQuantity = json_decode($order['products'], true);
 
-        // Получаем массив с индентификаторами товаров
+        // get array of products ID
         $productsIds = array_keys($productsQuantity);
 
-        // Получаем список товаров в заказе
+        // get list of products in order
         $products = Product::getProduсtsByIds($productsIds);
 
-        // Подключаем вид
         require_once(ROOT . '/views/cabinet/view.php');
         return true;
- 
     }
-    
+
 }

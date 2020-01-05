@@ -38,10 +38,10 @@
                                                 <?php echo $product['name'];?>
                                             </a>
                                         </p>
-                                        <a href="/cart/add/<?php echo $product['id']; ?>" 
+                                        <a href="/cart/addAjax/<?php echo $product['id']; ?>" 
                                            data-id="<?php echo $product['id'];?>"
                                            class="btn btn-default add-to-cart">
-                                            <i class="fa fa-shopping-cart"></i>В корзину (<?php echo Cart::countItems(); ?>)
+                                            <i class="fa fa-shopping-cart"></i>В корзину 
                                         </a>
                                     </div>
                                     <div class="product-overlay">
@@ -50,10 +50,10 @@
                                             <p><a href="/product/<?php echo $product['id']; ?>">
                                                 <?php echo $product['name']; ?>
                                             </a></p>
-                                            <a href="/cart/add/<?php echo $product['id']; ?>" 
+                                            <a href="/cart/addAjax/<?php echo $product['id']; ?>" 
                                             data-id="<?php echo $product['id']; ?>"
                                             class="btn btn-default add-to-cart">
-                                            <i class="fa fa-shopping-cart"></i>В корзину (<?php echo Cart::countItems(); ?>)
+                                            <i class="fa fa-shopping-cart"></i>В корзину 
                                             </a>
                                         </div>
                                     </div>

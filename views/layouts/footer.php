@@ -22,17 +22,18 @@
 <script src="/template/js/main.js"></script>
 
 
-<!-- <script>
+ <script>
     $(document).ready(function(){
         $(".add-to-cart").click(function () {
             var id = $(this).attr("data-id");
             $.post("/cart/addAjax/"+id, {}, function (data) {
                 $("#cart-count").html(data);
-                $("#in-cart").html(data);
+                alert('Добавлено в корзину.');
+
             });
             return false;
         });
     });
-</script> -->
+</script> 
 </body>
 </html>
