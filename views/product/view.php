@@ -21,7 +21,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-sm-9 padding-right">
                 <div class="product-details"><!--product-details-->
                     <div class="row">
@@ -32,11 +31,9 @@
                         </div>
                         <div class="col-sm-7">
                             <div class="product-information"><!--/product-information-->
-
                                 <?php if ($product['is_new']): ?>
                                     <img src="/template/images/product-details/new.jpg" class="newarrival" alt="" />
                                 <?php endif; ?>
-
                                 <h2><?php echo $product['name']; ?></h2>
                                 <p>Код товара: <?php echo $product['code']; ?></p>
                                 <span>

@@ -3,22 +3,16 @@
 <section class="section-inner">
     <div class="container">
         <div class="row">
-
             <br/>
-
             <div class="breadcrumbs">
                 <ol class="breadcrumb">
                     <li><a href="/admin">Админпанель ></a></li>
                     <li class="active">Управление товарами ></li>
                 </ol>
             </div>
-
             <a href="/admin/product/create" class="btn btn-default back"><i class="fa fa-plus"></i> Добавить товар</a>
-            
             <h4>Список товаров</h4>
-
             <br/>
-
             <table class="table-bordered table-striped table">
                 <tr>
                     <th>ID товара</th>
@@ -39,7 +33,6 @@
                     </tr>
                 <?php endforeach; ?>
             </table>
-
         </div>
     </div>
 </section>

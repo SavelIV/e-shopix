@@ -1,46 +1,43 @@
 <?php
 
 /**
- * Контроллер CatalogController
- * Каталог товаров
+ * Class CatalogController
+ * Class for products catalog manage
  */
-class CatalogController
-{
+class CatalogController {
 
     /**
-     * Action для страницы "Каталог товаров"
+     * Action for "Catalog" main page
      */
-    public function actionIndex()
-    {
-        // Список категорий для левого меню
+    public function actionIndex() {
+        // categories list for left menu
         $categories = Category::getCategoriesList();
 
-        // Список последних товаров
+        // latest products list (to show on main page (how much))
         $latestProducts = Product::getLatestProducts(12);
 
-        // Подключаем вид
         require_once(ROOT . '/views/catalog/index.php');
         return true;
     }
 
     /**
-     * Action для страницы "Категория товаров"
+     * Action for "Product category" page
+     * @param int $categoryId category id
+     * @param int $page [optional] current page number
      */
-    public function actionCategory($categoryId, $page = 1)
-    {
-        // Список категорий для левого меню
+    public function actionCategory($categoryId, $page = 1) {
+        // categories list for left menu
         $categories = Category::getCategoriesList();
 
-        // Список товаров в категории
+        // product list for current category
         $categoryProducts = Product::getProductsListByCategory($categoryId, $page);
 
-        // Общее количетсво товаров (необходимо для постраничной навигации)
+        // products amount in category (for page navigation)
         $total = Product::getTotalProductsInCategory($categoryId);
 
-        // Создаем объект Pagination - постраничная навигация
+        // new object Pagination (page navigation)
         $pagination = new Pagination($total, $page, Product::SHOW_BY_DEFAULT, 'page-');
 
-        // Подключаем вид
         require_once(ROOT . '/views/catalog/category.php');
         return true;
     }

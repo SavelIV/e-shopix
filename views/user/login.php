@@ -3,9 +3,7 @@
 <section class="section-inner">
     <div class="container">
         <div class="row">
-
             <div class="col-sm-4 col-sm-offset-4 padding-right">
-
                 <?php if (isset($errors) && is_array($errors)): ?>
                     <ul>
                         <?php foreach ($errors as $error): ?>
@@ -13,7 +11,6 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-
                 <div class="signup-form"><!--sign up form-->
                     <h2>Вход на сайт</h2>
                     <br/>
@@ -25,13 +22,12 @@
                         <input type="submit" name="submit" class="btn btn-default" value="Вход" />
                     </form>
                 </div><!--/sign up form-->
-                <div class="signup-form"><!--sign up form добавил для новой уч.записи:--> 
+                <div class="signup-form"><!--sign up form--> 
                     <h2>Регистрация</h2> 
                     <form action="/user/register/" method="post"> 
                         <button type="submit">Создать новую учетную запись</button> 
                     </form> 
-                </div><!--/sign up form конец добавления-->﻿
-
+                </div><!--/sign up form -->﻿
                 <br/>
                 <br/>
             </div>

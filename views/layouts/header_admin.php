@@ -13,14 +13,8 @@
         <link href="/template/css/animate.css" rel="stylesheet">
         <link href="/template/css/main.css" rel="stylesheet">
         <link href="/template/css/responsive.css" rel="stylesheet">
-
-        <!--[if lt IE 9]>
-        <script src="js/html5shiv.js"></script>
-        <script src="js/respond.min.js"></script>
-        <![endif]-->       
         <link rel="shortcut icon" href="/template/images/ico/favicon.ico">
     </head><!--/head-->
-
     <body>
         <header id="header"><!--header-->
             <div class="header_top"><!--header_top-->

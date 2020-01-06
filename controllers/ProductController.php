@@ -1,25 +1,22 @@
 <?php
 
 /**
- * Контроллер ProductController
- * Товар
+ * Class ProductController
+ * Class for product manage
  */
-class ProductController
-{
+class ProductController {
 
     /**
-     * Action для страницы просмотра товара
-     * @param integer $productId <p>id товара</p>
+     * Action for "Product view" page
+     * @param integer $productId product id
      */
-    public function actionView($productId)
-    {
-        // Список категорий для левого меню
+    public function actionView($productId) {
+        // categories list for left menu
         $categories = Category::getCategoriesList();
 
-        // Получаем инфомрацию о товаре
+        // get product info by id
         $product = Product::getProductById($productId);
 
-        // Подключаем вид
         require_once(ROOT . '/views/product/view.php');
         return true;
     }

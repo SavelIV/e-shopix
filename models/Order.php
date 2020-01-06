@@ -1,26 +1,23 @@
 <?php
 
 /**
- * Класс Order - модель для работы с заказами
+ * Class Order
+ * Model for working with orders
  */
-class Order
-{
+class Order {
 
     /**
-     * Сохранение заказа 
-     * @param string $userName <p>Имя</p>
-     * @param string $userPhone <p>Телефон</p>
-     * @param string $userComment <p>Комментарий</p>
-     * @param integer $userId <p>id пользователя</p>
-     * @param array $products <p>Массив с товарами</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * Saves order 
+     * @param string $userName user name
+     * @param string $userPhone user phone
+     * @param string $userComment user comment
+     * @param integer $userId user id
+     * @param array $products array with products
+     * @return boolean result
      */
-    public static function save($userName, $userPhone, $userComment, $userId, $products)
-    {
-        // Соединение с БД
+    public static function save($userName, $userPhone, $userComment, $userId, $products) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = 'INSERT INTO product_order (user_name, user_phone, user_comment, user_id, products)'
                 . 'VALUES (:user_name, :user_phone, :user_comment, :user_id, :products)';
 
@@ -37,15 +34,12 @@ class Order
     }
 
     /**
-     * Возвращает список заказов
-     * @return array <p>Список заказов</p>
+     * Returns orders list
+     * @return array orders list
      */
-    public static function getOrdersList()
-    {
-        // Соединение с БД
+    public static function getOrdersList() {
         $db = Db::getConnection();
 
-        // Получение и возврат результатов
         $result = $db->query('SELECT id, user_name, user_phone, date, status FROM product_order ORDER BY id DESC');
         $ordersList = array();
         $i = 0;
@@ -61,13 +55,12 @@ class Order
     }
 
     /**
-     * Возвращает текстое пояснение статуса для заказа :<br/>
-     * <i>1 - Новый заказ, 2 - В обработке, 3 - Доставляется, 4 - Закрыт</i>
-     * @param integer $status <p>Статус</p>
-     * @return string <p>Текстовое пояснение</p>
+     * Returns text about product order status:
+     * 1 - New order, 2 - In processing, 3 - Delivering, 4 - Close</i>
+     * @param integer $status status
+     * @return string text
      */
-    public static function getStatusText($status)
-    {
+    public static function getStatusText($status) {
         switch ($status) {
             case '1':
                 return 'Новый заказ';
@@ -85,30 +78,21 @@ class Order
     }
 
     /**
-     * Возвращает список заказов указанного пользователя user_id 
-     * @param integer $userId <p>userId</p>
-     * @return array <p>Массив со списком заказов</p>
+     * Returns orders list of user (by user_id)
+     * @param integer $userId user id
+     * @return array array with orders list
      */
-    public static function getOrdersListByUserId($userId)
-    {
-        // Соединение с БД
+    public static function getOrdersListByUserId($userId) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = 'SELECT id, user_name, user_phone, user_comment, date, products, status FROM product_order '
                 . 'WHERE user_id = :user_id '
                 . 'ORDER BY id DESC';
 
-        // Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':user_id', $userId, PDO::PARAM_INT);
-
-   
-        // Выполняем запрос
         $result->execute();
-       
-        
-        // Получение и возврат результатов
+
         $i = 0;
         $ordersList = array();
         while ($row = $result->fetch()) {
@@ -122,73 +106,54 @@ class Order
             $i++;
         }
         return $ordersList;
-
-    
-       
     }
-    
+
     /**
-     * Возвращает заказ по указанному id 
-     * @param integer $id <p>id</p>
-     * @return array <p>Массив с информацией о заказе</p>
+     * Returns order (by order_id) 
+     * @param integer $id order id
+     * @return array array with order info
      */
-    public static function getOrderById($id)
-    {
-        // Соединение с БД
+    public static function getOrderById($id) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = 'SELECT * FROM product_order WHERE id = :id';
 
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
-
-        // Указываем, что хотим получить данные в виде массива
         $result->setFetchMode(PDO::FETCH_ASSOC);
-
-        // Выполняем запрос
         $result->execute();
 
-        // Возвращаем данные
         return $result->fetch();
     }
 
-
     /**
-     * Удаляет заказ с заданным id
-     * @param integer $id <p>id заказа</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * Delete order (by order_id)
+     * @param integer $id order id
+     * @return boolean result
      */
-    public static function deleteOrderById($id)
-    {
-        // Соединение с БД
+    public static function deleteOrderById($id) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = 'DELETE FROM product_order WHERE id = :id';
 
-        // Получение и возврат результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         return $result->execute();
     }
 
     /**
-     * Редактирует заказ с заданным id
-     * @param integer $id <p>id товара</p>
-     * @param string $userName <p>Имя клиента</p>
-     * @param string $userPhone <p>Телефон клиента</p>
-     * @param string $userComment <p>Комментарий клиента</p>
-     * @param string $date <p>Дата оформления</p>
-     * @param integer $status <p>Статус <i>(включено "1", выключено "0")</i></p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * Update order (by order_id)
+     * @param integer $id order id
+     * @param string $userName user name
+     * @param string $userPhone user phone
+     * @param string $userComment user comment
+     * @param string $date order date
+     * @param integer $status status(on "1", off "0")
+     * @return boolean result
      */
-    public static function updateOrderById($id, $userName, $userPhone, $userComment, $date, $status)
-    {
-        // Соединение с БД
+    public static function updateOrderById($id, $userName, $userPhone, $userComment, $date, $status) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = "UPDATE product_order
             SET 
                 user_name = :user_name, 
@@ -198,7 +163,6 @@ class Order
                 status = :status 
             WHERE id = :id";
 
-        // Получение и возврат результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         $result->bindParam(':user_name', $userName, PDO::PARAM_STR);

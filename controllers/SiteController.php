@@ -1,81 +1,70 @@
 <?php
 
 /**
- * Контроллер SiteController
+ * Class SiteController
+ * site main pages
  */
-class SiteController
-{
+class SiteController {
 
     /**
-     * Action для главной страницы
+     * Action for "index" site page 
      */
-    public function actionIndex()
-    {
-        // Список категорий для левого меню
+    public function actionIndex() {
+        // categories for left menu
         $categories = Category::getCategoriesList();
 
-        // Список последних товаров
+        // latest products (amount if not default)
         $latestProducts = Product::getLatestProducts(9);
 
-        // Список товаров для слайдера
+        // products list for slider
         $sliderProducts = Product::getRecommendedProducts();
 
-        // Подключаем вид
         require_once(ROOT . '/views/site/index.php');
         return true;
     }
 
     /**
-     * Action для страницы "Контакты"
+     * Action for "contact" site page 
      */
-    public function actionContact()
-    {
+    public function actionContact() {
 
-        // Переменные для формы
-        $userEmail = false;
-        $userText = false;
-        
-        $result = false;
+        $userEmail = $userText = $result = false;
 
-        // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена 
-            // Получаем данные из формы
+
+            // get form data if submitted
             $userEmail = $_POST['userEmail'];
             $userText = $_POST['userText'];
 
-            // Флаг ошибок
+            // errors flag
             $errors = false;
 
-            // Валидация полей
+            // validation
             if (!User::checkEmail($userEmail)) {
                 $errors[] = 'Неправильный email';
             }
 
             if ($errors == false) {
-                // Если ошибок нет
-                // Отправляем письмо администратору 
-                $adminEmail = 'savelevi@mail.ru';
+
+                // send verification email to admin (and user?) 
+                $adminEmail = '';
                 $message = "Текст: {$userText}. От: {$userEmail}";
-                //обрезка строк до 60 символов
+                //max 60 simbols
                 $message = wordwrap($message, 60, "\r\n");
-                $subject = 'Письмо с сайта "Myshop.ru"';
-                $result = mail($adminEmail, $subject, $message);
+                $subject = 'Письмо с сайта "E-shopix"';
+//              $result = mail($adminEmail, $subject, $message);
                 $result = true;
             }
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/site/contact.php');
         return true;
     }
-    
+
     /**
-     * Action для страницы "О магазине"
+     * AAction for "about" site page
      */
-    public function actionAbout()
-    {
-        // Подключаем вид
+    public function actionAbout() {
         require_once(ROOT . '/views/site/about.php');
         return true;
     }

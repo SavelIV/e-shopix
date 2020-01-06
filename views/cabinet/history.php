@@ -1,15 +1,11 @@
-<?php 
-
-include ROOT . '/views/layouts/header.php'; ?>
+<?php include ROOT . '/views/layouts/header.php'; ?>
 
 <section class="section-inner">
     <div class="container">
-        
-            <h4>Список заказов</h4>
-            <br/>
-             <?php if ($ordersList != 0): ?>
+        <h4>Список заказов</h4>
+        <br/>
+        <?php if ($ordersList != 0): ?>
             <table class="table-bordered table-striped table">
-               
                 <tr>
                     <th>ID заказа</th>
                     <th>Имя покупателя</th>
@@ -19,9 +15,8 @@ include ROOT . '/views/layouts/header.php'; ?>
                     <th>Товары</th>
                     <th>Статус</th>
                 </tr>
-                
                 <?php foreach ($ordersList as $order): ?>
-                <tr>
+                    <tr>
                         <td>
                             <a href="/cabinet/view/<?php echo $order['id']; ?>">
                                 <?php echo $order['id']; ?>
@@ -33,15 +28,13 @@ include ROOT . '/views/layouts/header.php'; ?>
                         <td><?php echo $order['date']; ?></td>
                         <td><?php echo $order['products']; ?></td>
                         <td><?php echo Order::getStatusText($order['status']); ?></td>    
-                </tr>
+                    </tr>
                 <?php endforeach; ?>
-                </table>
-                <?php else: ?>
-                <p>Заказов пока нет (:</p>
-                <?php endif; ?>
-            
-                
-        </div>
+            </table>
+        <?php else: ?>
+            <p>Заказов пока нет (:</p>
+        <?php endif; ?>
+    </div>
 </section>
 
 <?php include ROOT . '/views/layouts/footer.php'; ?>

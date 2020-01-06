@@ -7,7 +7,7 @@
 class CabinetController {
    
     /**
-     * Action for "User cabinet" page
+     * Action for "User cabinet" main page
      */
     public function actionIndex() {
         

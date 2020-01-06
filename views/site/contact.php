@@ -3,9 +3,7 @@
 <section class="section-inner">
     <div class="container">
         <div class="row">
-
             <div class="col-sm-4 col-sm-offset-4 padding-right">
-
                 <?php if ($result): ?>
                     <p>Сообщение отправлено! Мы ответим Вам на указанный email.</p>
                 <?php else: ?>
@@ -16,7 +14,6 @@
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>
-
                     <div class="signup-form"><!--sign up form-->
                         <h2>Обратная связь</h2>
                         <h5>Есть вопрос? Напишите нам</h5>
@@ -31,10 +28,6 @@
                         </form>
                     </div><!--/sign up form-->
                 <?php endif; ?>
-
-
-                <br/>
-                <br/>
             </div>
         </div>
     </div>

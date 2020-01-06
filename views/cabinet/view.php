@@ -1,25 +1,16 @@
-<?php 
-include ROOT . '/views/layouts/header.php'; ?>
+<?php include ROOT . '/views/layouts/header.php'; ?>
 
 <section class="section-inner">
     <div class="container">
         <div class="row">
-
             <br/>
-
             <div class="breadcrumbs">
                 <ol class="breadcrumb">
                     <li class="active">Просмотр заказа</li>
                 </ol>
             </div>
-
-
             <h4>Просмотр заказа #<?php echo $order['id']; ?></h4>
             <br/>
-
-
-
-
             <h5>Информация о заказе</h5>
             <table class="table-admin-small table-bordered table-striped table">
                 <tr>
@@ -53,9 +44,7 @@ include ROOT . '/views/layouts/header.php'; ?>
                     <td><?php echo $order['date']; ?></td>
                 </tr>
             </table>
-
             <h5>Товары в заказе</h5>
-
             <table class="table-admin-medium table-bordered table-striped table ">
                 <tr>
                     <th>ID товара</th>
@@ -74,11 +63,8 @@ include ROOT . '/views/layouts/header.php'; ?>
                     </tr>
                 <?php endforeach; ?>
             </table>
-
             <a href="/cabinet/history/" class="btn btn-default back"><i class="fa fa-arrow-left"></i> Назад</a>
         </div>
-
-
 </section>
 
 <?php include ROOT . '/views/layouts/footer.php'; ?>

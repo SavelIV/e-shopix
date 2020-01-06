@@ -2,134 +2,120 @@
 
 /**
  * Class CartController
- * Work with cart
+ * Class for cart manage
  */
-class CartController
-{
+class CartController {
+    /**
+     * Action for add product in cart by synchronous request
+     * @param integer $id product id
+     */
+//    public function actionAdd($id)
+//    {
+//        // add product in cart
+//        Cart::addProduct($id);
+//
+//        // return user on his page
+//        $referrer = $_SERVER['HTTP_REFERER'];
+//        header("Location: $referrer");
+//    }
 
     /**
-     * Action для добавления товара в корзину синхронным запросом<br/>
-     * @param integer $id <p>id товара</p>
+     * Action for add product in cart by asynchronous request(ajax)
+     * @param integer $id product id
      */
-    public function actionAdd($id)
-    {
-        // Добавляем товар в корзину
-        Cart::addProduct($id);
-
-        // Возвращаем пользователя на страницу с которой он пришел
-        $referrer = $_SERVER['HTTP_REFERER'];
-        header("Location: $referrer");
-    }
-
-    /**
-     * Action для добавления товара в корзину при помощи асинхронного запроса (ajax)
-     * (для примера, не используется-не обновляет картинку на кнопке "в корзину")
-     * @param integer $id <p>id товара</p>
-     */
-    public function actionAddAjax($id)
-    {
-        // Добавляем товар в корзину и печатаем результат: количество товаров в корзине
+    public function actionAddAjax($id) {
+        // add product in cart and output result in cart brackets: products in cart amount
         echo Cart::addProduct($id);
         return true;
     }
-    
-    /**
-     * Action для удаления товара из корзину синхронным запросом
-     * @param integer $id <p>id товара</p>
-     */
-    public function actionDelete($id)
-    {
-        // Удаляем заданный товар из корзины
-        Cart::deleteProduct($id);
 
-        // Возвращаем пользователя в корзину
+    /**
+     * Action for delete product from cart
+     * @param integer $id product id
+     */
+    public function actionDelete($id) {
+        Cart::deleteProduct($id);
         header("Location: /cart");
     }
 
     /**
-     * Action для страницы "Корзина"
+     * Action for "Cart" main page
      */
-    public function actionIndex()
-    {
-        // Список категорий для левого меню
+    public function actionIndex() {
+        // categories list for left menu
         $categories = Category::getCategoriesList();
 
-        // Получим идентификаторы и количество товаров в корзине
+        // get id and amount of products in cart
         $productsInCart = Cart::getProducts();
 
+        // if is products, get all products info
         if ($productsInCart) {
-            // Если в корзине есть товары, получаем полную информацию о товарах для списка
-            // Получаем массив только с идентификаторами товаров
+
+            // get array with products id
             $productsIds = array_keys($productsInCart);
 
-            // Получаем массив с полной информацией о необходимых товарах
+            // get array with all products info
             $products = Product::getProduсtsByIds($productsIds);
 
-            // Получаем общую стоимость товаров
+            // get all products total price
             $totalPrice = Cart::getTotalPrice($products);
         }
 
-        // Подключаем вид
         require_once(ROOT . '/views/cart/index.php');
         return true;
     }
 
     /**
-     * Action для страницы "Оформление покупки"
+     * Action for "Cart checkout" page
      */
-    public function actionCheckout()
-    {
-        // Получаем данные из корзины      
+    public function actionCheckout() {
+        // get id and amount of products in cart      
         $productsInCart = Cart::getProducts();
 
-        // Если товаров нет, отправляем пользователи искать товары на главную
+        // if no products, return user on main page
         if ($productsInCart == false) {
             header("Location: /");
         }
 
-        // Список категорий для левого меню
+        // categories list for left menu
         $categories = Category::getCategoriesList();
 
-        // Находим общую стоимость
+        // get total price
         $productsIds = array_keys($productsInCart);
         $products = Product::getProduсtsByIds($productsIds);
         $totalPrice = Cart::getTotalPrice($products);
 
-        // Количество товаров
+        // total amount of products in cart
         $totalQuantity = Cart::countItems();
 
-        // Поля для формы
-        $userName = false;
-        $userPhone = false;
-        $userComment = false;
+        $userName = $userPhone = $userComment = false;
 
-        // Статус успешного оформления заказа
+        // success checkout status
         $result = false;
 
-        // Проверяем является ли пользователь гостем
+        // if user is not guest
         if (!User::isGuest()) {
-            // Если пользователь не гость
-            // Получаем информацию о пользователе из БД
+
+            // get user info from DB
             $userId = User::checkLogged();
             $user = User::getUserById($userId);
             $userName = $user['name'];
         } else {
-            // Если гость, поля формы останутся пустыми
+            // if user is guest
             $userId = false;
         }
 
-        // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Получаем данные из формы
+
+            // get form data
             $userName = $_POST['userName'];
             $userPhone = $_POST['userPhone'];
             $userComment = $_POST['userComment'];
 
-            // Флаг ошибок
+            // errors flag
             $errors = false;
 
-            // Валидация полей
+            // validation
             if (!User::checkName($userName)) {
                 $errors[] = 'Имя не менее 2-х символов';
             }
@@ -139,25 +125,23 @@ class CartController
 
 
             if ($errors == false) {
-                // Если ошибок нет
-                // Сохраняем заказ в базе данных
+
+                // save order in DB if no errors 
                 $result = Order::save($userName, $userPhone, $userComment, $userId, $productsInCart);
 
                 if ($result) {
-                    // Если заказ успешно сохранен
-                    // Оповещаем администратора о новом заказе по почте                
-                    $adminEmail = '';
-                    $message = wordwrap($userComment, 60, "\r\n");
-                    $subject = 'Новый заказ с сайта http://My_minishop.ru';
-//                    mail($adminEmail, $subject, $message);
 
-                    // Очищаем корзину
+                    // send verification email to admin (and user?)                
+                    $adminEmail = '';
+                    //max 60 simbols
+                    $message = wordwrap($userComment, 60, "\r\n");
+                    $subject = 'Новый заказ с сайта "E-shopix"';
+//                  mail($adminEmail, $subject, $message);
+                    // clear cart
                     Cart::clear();
                 }
             }
         }
-
-        // Подключаем вид
         require_once(ROOT . '/views/cart/checkout.php');
         return true;
     }

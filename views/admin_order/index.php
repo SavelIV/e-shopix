@@ -3,21 +3,15 @@
 <section class="section-inner">
     <div class="container">
         <div class="row">
-
             <br/>
-                        
             <div class="breadcrumbs">
                 <ol class="breadcrumb">
                     <li><a href="/admin">Админпанель ></a></li>
                     <li class="active">Управление заказами ></li>
                 </ol>
             </div>
-
             <h4>Список заказов</h4>
-
             <br/>
-
-            
             <table class="table-bordered table-striped table">
                 <tr>
                     <th>ID заказа</th>
@@ -46,7 +40,6 @@
                     </tr>
                 <?php endforeach; ?>
             </table>
-
         </div>
     </div>
 </section>

@@ -1,41 +1,34 @@
 <?php
 
 /**
- * Класс Product - модель для работы с товарами
+ * Class Product 
+ * Model for working with products
  */
-class Product
-{
+class Product {
 
-    // Количество отображаемых товаров по умолчанию
+    // products amount displayed on current page by default
     const SHOW_BY_DEFAULT = 3;
 
     /**
-     * Возвращает массив последних товаров
-     * @param type $count [optional] <p>Количество</p>
-     * @param type $page [optional] <p>Номер текущей страницы</p>
-     * @return array <p>Массив с товарами</p>
+     * Returns latest products array
+     * @param int $count [optional] products amount on current page
+     * @return array array with products([product]=>[amount])
      */
-    public static function getLatestProducts($count = self::SHOW_BY_DEFAULT)
-    {
-        // Соединение с БД
+    public static function getLatestProducts($count = self::SHOW_BY_DEFAULT) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = 'SELECT id, name, price, is_new FROM product '
                 . 'WHERE status = "1" ORDER BY id DESC '
                 . 'LIMIT :count';
 
-        // Используется подготовленный запрос
+        // use prepared statements
         $result = $db->prepare($sql);
         $result->bindParam(':count', $count, PDO::PARAM_INT);
 
-        // Указываем, что хотим получить данные в виде массива
+        // get the result as an associative array (product=>amount)
         $result->setFetchMode(PDO::FETCH_ASSOC);
-        
-        // Выполнение команды
         $result->execute();
 
-        // Получение и возврат результатов
         $i = 0;
         $productsList = array();
         while ($row = $result->fetch()) {
@@ -49,35 +42,30 @@ class Product
     }
 
     /**
-     * Возвращает список товаров в указанной категории
-     * @param type $categoryId <p>id категории</p>
-     * @param type $page [optional] <p>Номер страницы</p>
-     * @return type <p>Массив с товарами</p>
+     * Returns product list for current category (depending on page number)
+     * @param int $categoryId category id
+     * @param int $page [optional] current page number
+     * @return array array with products
      */
-    public static function getProductsListByCategory($categoryId, $page = 1)
-    {
+    public static function getProductsListByCategory($categoryId, $page = 1) {
+        //products on page
         $limit = Product::SHOW_BY_DEFAULT;
-        // Смещение (для запроса)
+        // offset (for DB query), depending on page number
         $offset = ($page - 1) * self::SHOW_BY_DEFAULT;
 
-        // Соединение с БД
         $db = Db::getConnection();
 
-        // Текст запроса к БД
+        //status=1 - "open for sale products"
         $sql = 'SELECT id, name, price, is_new FROM product '
-                . 'WHERE status = 1 AND category_id = :category_id '
+                . 'WHERE status = "1" AND category_id = :category_id '
                 . 'ORDER BY id DESC LIMIT :limit OFFSET :offset';
 
-        // Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
         $result->bindParam(':limit', $limit, PDO::PARAM_INT);
         $result->bindParam(':offset', $offset, PDO::PARAM_INT);
-
-        // Выполнение команды
         $result->execute();
 
-        // Получение и возврат результатов
         $i = 0;
         $products = array();
         while ($row = $result->fetch()) {
@@ -91,79 +79,58 @@ class Product
     }
 
     /**
-     * Возвращает продукт с указанным id
-     * @param integer $id <p>id товара</p>
-     * @return array <p>Массив с информацией о товаре</p>
+     * Returns product info by id
+     * @param integer $id product id
+     * @return array array with product info
      */
-    public static function getProductById($id)
-    {
-        // Соединение с БД
+    public static function getProductById($id) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = 'SELECT * FROM product WHERE id = :id';
 
-        // Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
-
-        // Указываем, что хотим получить данные в виде массива
         $result->setFetchMode(PDO::FETCH_ASSOC);
-
-        // Выполнение команды
         $result->execute();
 
-        // Получение и возврат результатов
         return $result->fetch();
     }
 
     /**
-     * Возвращаем количество товаров в указанной категории
-     * @param integer $categoryId
-     * @return integer
+     * Returns products amount in category
+     * @param integer $categoryId category id
+     * @return integer products amount in category
      */
-    public static function getTotalProductsInCategory($categoryId)
-    {
-        // Соединение с БД
+    public static function getTotalProductsInCategory($categoryId) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
+        //status=1 - "open for sale products"
         $sql = 'SELECT count(id) AS count FROM product WHERE status="1" AND category_id = :category_id';
 
-        // Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
-
-        // Выполнение команды
         $result->execute();
 
-        // Возвращаем значение count - количество
         $row = $result->fetch();
         return $row['count'];
     }
 
     /**
-     * Возвращает список товаров с указанными индентификторами
-     * @param array $idsArray <p>Массив с идентификаторами</p>
-     * @return array <p>Массив со списком товаров</p>
+     * Returns array of products depending on their ids
+     * @param array $idsArray array with product ids
+     * @return array array with products list
      */
-    public static function getProduсtsByIds($idsArray)
-    {
-        // Соединение с БД
+    public static function getProduсtsByIds($idsArray) {
         $db = Db::getConnection();
 
-        // Превращаем массив в строку для формирования условия в запросе
+        // array to string for DB query
         $idsString = implode(',', $idsArray);
 
-        // Текст запроса к БД
         $sql = "SELECT * FROM product WHERE status='1' AND id IN ($idsString)";
 
         $result = $db->query($sql);
-
-        // Указываем, что хотим получить данные в виде массива
         $result->setFetchMode(PDO::FETCH_ASSOC);
 
-        // Получение и возврат результатов
         $i = 0;
         $products = array();
         while ($row = $result->fetch()) {
@@ -177,15 +144,12 @@ class Product
     }
 
     /**
-     * Возвращает список рекомендуемых товаров
-     * @return array <p>Массив с товарами</p>
+     * Returns recommended product list
+     * @return array array with rec.products
      */
-    public static function getRecommendedProducts()
-    {
-        // Соединение с БД
+    public static function getRecommendedProducts() {
         $db = Db::getConnection();
 
-        // Получение и возврат результатов
         $result = $db->query('SELECT id, name, price, is_new FROM product '
                 . 'WHERE status = "1" AND is_recommended = "1" '
                 . 'ORDER BY id DESC');
@@ -202,15 +166,12 @@ class Product
     }
 
     /**
-     * Возвращает список товаров
-     * @return array <p>Массив с товарами</p>
+     * Returns all products array
+     * @return array array with products
      */
-    public static function getProductsList()
-    {
-        // Соединение с БД
+    public static function getProductsList() {
         $db = Db::getConnection();
 
-        // Получение и возврат результатов
         $result = $db->query('SELECT id, name, price, code FROM product ORDER BY id ASC');
         $productsList = array();
         $i = 0;
@@ -225,36 +186,29 @@ class Product
     }
 
     /**
-     * Удаляет товар с указанным id
-     * @param integer $id <p>id товара</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * Delete product by id
+     * @param integer $id product id
+     * @return boolean 
      */
-    public static function deleteProductById($id)
-    {
-        // Соединение с БД
+    public static function deleteProductById($id) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = 'DELETE FROM product WHERE id = :id';
 
-        // Получение и возврат результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         return $result->execute();
     }
 
     /**
-     * Редактирует товар с заданным id
-     * @param integer $id <p>id товара</p>
-     * @param array $options <p>Массив с информацей о товаре</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * Update product by id
+     * @param integer $id product id
+     * @param array $options product info array
+     * @return boolean 
      */
-    public static function updateProductById($id, $options)
-    {
-        // Соединение с БД
+    public static function updateProductById($id, $options) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = "UPDATE product
             SET 
                 name = :name, 
@@ -269,7 +223,6 @@ class Product
                 status = :status
             WHERE id = :id";
 
-        // Получение и возврат результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         $result->bindParam(':name', $options['name'], PDO::PARAM_STR);
@@ -286,16 +239,13 @@ class Product
     }
 
     /**
-     * Добавляет новый товар
-     * @param array $options <p>Массив с информацией о товаре</p>
-     * @return integer <p>id добавленной в таблицу записи</p>
+     * Adds new product
+     * @param array $options product info array
+     * @return mixed added string id or 0
      */
-    public static function createProduct($options)
-    {
-        // Соединение с БД
+    public static function createProduct($options) {
         $db = Db::getConnection();
 
-        // Текст запроса к БД
         $sql = 'INSERT INTO product '
                 . '(name, code, price, category_id, brand, availability,'
                 . 'description, is_new, is_recommended, status)'
@@ -303,7 +253,6 @@ class Product
                 . '(:name, :code, :price, :category_id, :brand, :availability,'
                 . ':description, :is_new, :is_recommended, :status)';
 
-        // Получение и возврат результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':name', $options['name'], PDO::PARAM_STR);
         $result->bindParam(':code', $options['code'], PDO::PARAM_STR);
@@ -315,22 +264,20 @@ class Product
         $result->bindParam(':is_new', $options['is_new'], PDO::PARAM_INT);
         $result->bindParam(':is_recommended', $options['is_recommended'], PDO::PARAM_INT);
         $result->bindParam(':status', $options['status'], PDO::PARAM_INT);
+
         if ($result->execute()) {
-            // Если запрос выполенен успешно, возвращаем id добавленной записи
             return $db->lastInsertId();
         }
-        // Иначе возвращаем 0
         return 0;
     }
 
     /**
-     * Возвращает текстое пояснение наличия товара:<br/>
-     * <i>0 - Под заказ, 1 - В наличии</i>
-     * @param integer $availability <p>Статус</p>
-     * @return string <p>Текстовое пояснение</p>
+     * Returns text about product availability status:
+     * 0 - to order, 1 - available
+     * @param integer $availability status
+     * @return string text
      */
-    public static function getAvailabilityText($availability)
-    {
+    public static function getAvailabilityText($availability) {
         switch ($availability) {
             case '1':
                 return 'В наличии';
@@ -342,28 +289,27 @@ class Product
     }
 
     /**
-     * Возвращает путь к изображению
-     * @param integer $id
-     * @return string <p>Путь к изображению</p>
+     * Returns image path
+     * @param integer $id product id (image id)
+     * @return string path to image
      */
-    public static function getImage($id)
-    {
-        // Название изображения-пустышки
+    public static function getImage($id) {
+        // empty image (if no images)
         $noImage = 'no-image.jpg';
 
-        // Путь к папке с товарами
+        // path to images folder
         $path = '/upload/images/products/';
 
-        // Путь к изображению товара
+        // path to product image
         $pathToProductImage = $path . $id . '.jpg';
 
-        if (file_exists($_SERVER['DOCUMENT_ROOT'].$pathToProductImage)) {
-            // Если изображение для товара существует
-            // Возвращаем путь изображения товара
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $pathToProductImage)) {
+
+            // if image exist, returns its path
             return $pathToProductImage;
         }
 
-        // Возвращаем путь изображения-пустышки
+        // return empty image puth
         return $path . $noImage;
     }
 

@@ -1,137 +1,119 @@
 <?php
-/*
-* Класс Cart
-* Модель для работы корзиной
+
+/**
+ * Class Cart
+ * Model for working with cart
  */
-class Cart
-{
-/*
-* Добавление товара в корзину (сессию)
-* @param int $id <p>id товара</p>
-* @return integer <p>Количество товаров в корзине</p>
+class Cart {
+
+    /**
+     * Add product in cart (session)
+     * @param integer $id product id
+     * @return integer products in cart amount
      */
-public static function addProduct($id)
-    {
-        // Приводим $id к типу integer
-$id = intval($id);
-        // Пустой массив для товаров в корзине
-$productsInCart = array();
-        // Если в корзине уже есть товары (они хранятся в сессии)
-if (isset($_SESSION['products'])) {
-            // То заполним наш массив товарами
-$productsInCart = $_SESSION['products'];
+    public static function addProduct($id) {
+        // $id - integer type
+        $id = intval($id);
+        // empty array for products in cart
+        $productsInCart = array();
+        // if is product in cart (in session)
+        if (isset($_SESSION['products'])) {
+            // put them in array
+            $productsInCart = $_SESSION['products'];
         }
-        // Проверяем есть ли уже такой товар в корзине 
-if (array_key_exists($id, $productsInCart)) {
-           // Если такой товар есть в корзине, но был добавлен еще раз, увеличим количество на 1
-$productsInCart[$id] ++;
-        } 
-else {
-           // Если нет, добавляем id нового товара в корзину с количеством 1
-$productsInCart[$id] = 1;
+        // if there is same product in cart 
+        if (array_key_exists($id, $productsInCart)) {
+            // increase its quantity
+            $productsInCart[$id] ++;
+        } else {
+            // if no, add this product with quantity=1
+            $productsInCart[$id] = 1;
         }
-       // Записываем массив с товарами в сессию
-$_SESSION['products'] = $productsInCart;
-        // Возвращаем количество товаров в корзине
-return self::countItems();
+        // put products in cart array in session
+        $_SESSION['products'] = $productsInCart;
+        // return products in cart amount
+        return self::countItems();
     }
 
-    
-/*
-* Подсчет количество товаров в корзине (в сессии)
-* @return int <p>Количество товаров в корзине</p>
+    /**
+     * Get total amount of products in cart (in session)
+     * @return int total amount of products in cart
      */
-public static function countItems()
-    {
-        // Проверка наличия товаров в корзине
-if (isset($_SESSION['products'])) {
-            // Если массив с товарами есть
-           // Подсчитаем и вернем их количество
-            
-$count = 0;
-            
-foreach ($_SESSION['products'] as $id => $quantity) {
+    public static function countItems() {
 
+        // if is array with products in cart in session
+        if (isset($_SESSION['products'])) {
+
+            // return products amount
+
+            $count = 0;
+            foreach ($_SESSION['products'] as $id => $quantity) {
                 $count = $count + $quantity;
             }
             return $count;
         } else {
-            // Если товаров нет, вернем 0
+            // if no products, return 0
             return 0;
         }
     }
 
-    /*
-* Возвращает массив с идентификаторами и количеством товаров в корзине<br/>
-* Если товаров нет, возвращает false;
-* @return mixed: boolean or array
+    /**
+     * Return id and amount of products in cart,
+     * if no products - return false
+     * @return mixed boolean or array
      */
-public static function getProducts()
-    {
-if (isset($_SESSION['products'])) {
-return $_SESSION['products'];
+    public static function getProducts() {
+        if (isset($_SESSION['products'])) {
+            return $_SESSION['products'];
         }
-return false;
+        return false;
     }
-/*
-* Получаем общую стоимость переданных товаров
-* @param array $products <p>Массив с информацией о товарах</p>
-* @return integer <p>Общая стоимость</p>
-     */
-    
-public static function getTotalPrice($products)
-    {
-        // Получаем массив с идентификаторами и количеством товаров в корзине
-$productsInCart = self::getProducts();
-        // Подсчитываем общую стоимость
-$total = 0;
-if ($productsInCart) {
-            // Если в корзине не пусто
-            // Проходим по переданному в метод массиву товаров
-foreach ($products as $item) {
-               // Находим общую стоимость: цена товара * количество товара
-$total += $item['price'] * $productsInCart[$item['id']];
-           }
-       }
-return $total;
-    }
-    
-/*
-* Очищает корзину
-     */
-public static function clear()
-    {
-if (isset($_SESSION['products'])) {
-unset($_SESSION['products']);
-        }
-    }
-    
-/*
-* Удаляет товар с указанным id из корзины
-* @param integer $id <p>id товара</p>
-     */
-public static function deleteProduct($id)
-    {
-    
-    // Получаем массив с идентификаторами и количеством товаров в корзине
-    $productsInCart = self::getProducts();  
 
-    //дале: для удаления товаров по одному
-    if(array_key_exists($id, $productsInCart)) { 
-        $productsInCart[$id]--;
-     } 
-     if($productsInCart[$id]<=0){
-         unset($productsInCart[$id]);
-      } 
-      $_SESSION['products'] = $productsInCart;
-      return self::countItems();
-      
-        //далее: для удаления товаров сразу группой (удаляет сразу все штуки товара)
-        // Получаем массив с идентификаторами и количеством товаров в корзине
-//$productsInCart = self::getProducts();
-        // Удаляем из массива элемент с указанным id
-//unset($productsInCart[$id]);
-        // Записываем массив товаров с удаленным элементом в сессию
-//$_SESSION['products'] = $productsInCart;
+    /**
+     * Get total price of products in cart
+     * @param array $products array with products info
+     * @return integer total price of products in cart
+     */
+    public static function getTotalPrice($products) {
+        // get array with ids and amount of products in cart
+        $productsInCart = self::getProducts();
+        // count total price
+        $total = 0;
+        if ($productsInCart) {
+            foreach ($products as $item) {
+                $total += $item['price'] * $productsInCart[$item['id']];
+            }
+        }
+        return $total;
     }
+
+    /**
+     * Clear cart
+     */
+    public static function clear() {
+        if (isset($_SESSION['products'])) {
+            unset($_SESSION['products']);
+        }
+    }
+
+    /**
+     * Delete product (by id) from cart
+     * @param integer $id product id
+     */
+    public static function deleteProduct($id) {
+
+        // get array with ids and amount of products in cart
+        $productsInCart = self::getProducts();
+
+        // delete products (each by one)
+        if (array_key_exists($id, $productsInCart)) {
+            $productsInCart[$id] --;
+        }
+        if ($productsInCart[$id] <= 0) {
+            unset($productsInCart[$id]);
+        }
+        $_SESSION['products'] = $productsInCart;
+        return self::countItems();
+    }
+
 }
