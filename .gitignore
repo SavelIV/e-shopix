@@ -7,3 +7,4 @@ db_export/phpshop.sql
 composer.lock
 composer.phar
 Vagrantfile
+.gitattributes
