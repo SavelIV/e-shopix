@@ -1,5 +1,4 @@
-# e-shopix
-Shop on PHP, MySQL, AJAX (uses RBAC, CRUD operations in adminpanel).
+# E-shopix
 This site was made on PHP 7.0 with using MVC pattern and OOP practice. 
 All code is well documented (and self-documented :) ). 
 It uses Javascript technique (AJAX)to adding new product in cart and MySql database for storing 
