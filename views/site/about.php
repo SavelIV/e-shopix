@@ -6,7 +6,7 @@
             <div class="col-lg-6">
                 <h4>Информация о магазине</h4>
                 <br/>
-                <p>This site was made on PHP with using MVC pattern and OOP practice.
+                <p>This site was made on PHP 7.0 with using MVC pattern and OOP practice.
                     All code is well documented (and self-documented :) ).
                     It uses Javascript technique (AJAX)to adding new product in cart 
                     and MySql database for storing products, orders, product categories 
