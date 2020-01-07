@@ -2,7 +2,7 @@
 
 /**
  * 
- * Class Db works with Database
+ * Class Db get connection to Database
  */
 class Db {
 

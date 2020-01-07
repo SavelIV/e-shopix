@@ -3,7 +3,7 @@
     <div class="footer-bottom">
         <div class="container">
             <div class="row">
-                <p class="pull-left">Copyright © 2020</p>
+                <p class="pull-left">Copyright © 2019</p>
                 <p class="pull-right"><i class="fa fa-star"></i>E-shopix</p>
             </div>
         </div>

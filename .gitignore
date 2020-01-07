@@ -1,5 +1,7 @@
 puphpet/
 nbproject/
 .vagrant/
-config/db_params.php
-db_export/phpshop.sql
+vendor/
+config/db_params_main.php
+composer.lock
+composer.phar
