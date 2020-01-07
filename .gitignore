@@ -3,5 +3,6 @@ nbproject/
 .vagrant/
 vendor/
 config/db_params_main.php
+db_export/phpshop.sql
 composer.lock
 composer.phar
