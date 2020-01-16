@@ -8,4 +8,5 @@ It requires Intervension and Phpmailer libraries (may look in composer.json file
 to resize uploaded product images and post letters to admin and user respectively.
 Site has Admin account (simple RBAC) that allows admin to manage some data 
 (make create/read/update/delete (CRUD) operations with products, product categories, orders and users data). 
-To see this, login as admin - use ... and ... for login/password respectively and add "/admin" in URL after "www.e-shopix.com".
+To see this, you can login as admin: use ... and ...(ask me: savelevi@mail.ru) for login/password respectively 
+and add "/admin" in URL after "e-shopix.saviv.site". All passwords store in HASH only.
