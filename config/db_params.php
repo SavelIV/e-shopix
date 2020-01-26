@@ -3,7 +3,7 @@
 // Array with DB connection params
 return array(
     'host' => '',
-    'dbname' => 'e-shopix',
+    'dbname' => '',
     'user' => '',
     'password' => '',
 );
